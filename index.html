@@ -12,13 +12,26 @@
     <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
 </head>
 <body class="is-boxed">
+	<script>
+function myFunction() {
+  //document.getElementById("demo").innerHTML = "Hello World";
+  fetch('https://api.ner.kz/NerzulBot/post', {
+      method: 'post',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+      body: JSON.stringify(document.getElementById('qta_field').value)
+    });
+}
+</script>
     <div class="body-wrap boxed-container">
         <header class="site-header">
             <div class="container">
                 <div class="site-header-inner">
                     <div class="brand header-brand">
                         <h1 class="m-0">
-                            <a href="car">
+                            <a href="/car">
 								<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
 								    <title>Ner</title>
 								    <defs>
@@ -59,10 +72,10 @@
 	                        <p class="hero-paragraph is-revealing">Our landing page template works on all devices, so you only have to set it up once, and get beautiful results forever.</p>
 							<div class="hero-form field field-grouped is-revealing">
 	                            <div class="control control-expanded">
-	                                <input class="input" type="email" name="email" placeholder="Your best email&hellip;">
+	                                <input class="input" type="email" id="qta_field" name="email" placeholder="Your best email&hellip;">
 	                            </div>
 	                            <div class="control">
-	                                <a class="button button-primary button-block" href="/">Notify Me</a>
+	                                <a class="button button-primary button-block" onclick="myFunction()">Notify Me</a>
 	                            </div>
 	                        </div>
 						</div>
