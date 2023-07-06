@@ -32,6 +32,9 @@ const connection = new signalR.HubConnectionBuilder()
 
 connection.on("ReceiveMessage", (user, message) => {
     console.log(user + " says: " + message);
+	var li = document.createElement('li');
+		li.textContent = message;
+		messageList.appendChild(li);
 });
 
 connection.start()
@@ -367,6 +370,8 @@ connection.start()
             <section class="features section">
                 <div class="container">
                     <div class="features-inner section-inner">
+						<ul id="messageList" style="position: absolute; right: 0;"></ul>
+
 						<div class="features-wrap">
 	                        <div class="feature">
 	                            <div class="feature-inner">
@@ -426,8 +431,6 @@ connection.start()
 	                            </div>
 	                        </div>
 						</div>
-
-						<ul id="messageList"></ul>
 
                     </div>
                 </div>
