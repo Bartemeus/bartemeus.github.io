@@ -16,6 +16,7 @@
 	<script>
 function myFunction() {
   //document.getElementById("demo").innerHTML = "Hello World";
+	connection.invoke("SendMessage", "Ner", document.getElementById('qta_field').value);
   fetch('/api/NerzulBot/post', {
       method: 'post',
       headers: {
