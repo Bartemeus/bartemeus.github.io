@@ -31,10 +31,7 @@ const connection = new signalR.HubConnectionBuilder()
     .build();
 
 connection.on("ReceiveMessage", (user, message) => {
-    // console.log(user + " says: " + message);
-	var li = document.createElement('li');
-	li.textContent = user + " says: " + message;
-	messageList?.appendChild(li);
+    console.log(user + " says: " + message);
 });
 
 connection.start()
@@ -44,19 +41,6 @@ connection.start()
     .catch(error => {
         console.error(error);
     });
-
-// Предположим, что у вас есть массив сообщений
-var messages = ['Сообщение 1', 'Сообщение 2', 'Сообщение 3'];
-
-// Получаем ссылку на элемент списка
-var messageList = document.getElementById('messageList');
-
-// Используем цикл для создания элементов списка
-messages.forEach(function(message) {
-  var li = document.createElement('li');
-  li.textContent = message;
-  messageList.appendChild(li);
-});
 
 </script>
     <div class="body-wrap boxed-container">
@@ -508,6 +492,21 @@ messages.forEach(function(message) {
         </footer>
     </div>
 
-    <script src="dist/js/main.min.js"></script>
+    <script src="dist/js/main.min.js">
+		
+
+// Предположим, что у вас есть массив сообщений
+var messages = ['Сообщение 1', 'Сообщение 2', 'Сообщение 3'];
+
+// Получаем ссылку на элемент списка
+var messageList = document.getElementById('messageList');
+
+// Используем цикл для создания элементов списка
+messages.forEach(function(message) {
+  var li = document.createElement('li');
+  li.textContent = message;
+  messageList.appendChild(li);
+});
+	</script>
 </body>
 </html>
