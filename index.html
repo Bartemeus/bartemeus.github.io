@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css?family=Heebo:400,400i,500,700|Titillium+Web:600" rel="stylesheet">
     <link rel="stylesheet" href="dist/css/style.css">
     <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
 </head>
 <body class="is-boxed">
 	<script>
@@ -24,6 +25,22 @@ function myFunction() {
       body: JSON.stringify(document.getElementById('qta_field').value)
     });
 }
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("ner.kz/api/chatHub")
+    .build();
+
+connection.on("ReceiveMessage", (user, message) => {
+    console.log(user + " says: " + message);
+});
+
+connection.start()
+    .then(() => {
+        connection.invoke("SendMessage", "John", "Hello, World!");
+    })
+    .catch(error => {
+        console.error(error);
+    });
+
 </script>
     <div class="body-wrap boxed-container">
         <header class="site-header">
