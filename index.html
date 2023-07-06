@@ -31,7 +31,10 @@ const connection = new signalR.HubConnectionBuilder()
     .build();
 
 connection.on("ReceiveMessage", (user, message) => {
-    console.log(user + " says: " + message);
+    // console.log(user + " says: " + message);
+	var li = document.createElement('li');
+	li.textContent = user + " says: " + message;
+	messageList?.appendChild(li);
 });
 
 connection.start()
