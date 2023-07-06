@@ -426,8 +426,10 @@ connection.start()
 	                            </div>
 	                        </div>
 						</div>
+
+						<ul id="messageList"></ul>
+
                     </div>
-					<ul id="messageList"></ul>
                 </div>
             </section>
         </main>
@@ -491,22 +493,21 @@ connection.start()
             </div>
         </footer>
     </div>
+	<script>
+		// Предположим, что у вас есть массив сообщений
+		var messages = ['Сообщение 1', 'Сообщение 2', 'Сообщение 3'];
 
-    <script src="dist/js/main.min.js">
-		
+		// Получаем ссылку на элемент списка
+		var messageList = document.getElementById('messageList');
 
-// Предположим, что у вас есть массив сообщений
-var messages = ['Сообщение 1', 'Сообщение 2', 'Сообщение 3'];
-
-// Получаем ссылку на элемент списка
-var messageList = document.getElementById('messageList');
-
-// Используем цикл для создания элементов списка
-messages.forEach(function(message) {
-  var li = document.createElement('li');
-  li.textContent = message;
-  messageList.appendChild(li);
-});
+		// Используем цикл для создания элементов списка
+		messages.forEach(function(message) {
+		var li = document.createElement('li');
+		li.textContent = message;
+		messageList.appendChild(li);
+		});
 	</script>
+
+<script src="dist/js/main.min.js"></script>
 </body>
 </html>
