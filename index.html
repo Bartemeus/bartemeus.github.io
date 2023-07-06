@@ -42,6 +42,19 @@ connection.start()
         console.error(error);
     });
 
+// Предположим, что у вас есть массив сообщений
+var messages = ['Сообщение 1', 'Сообщение 2', 'Сообщение 3'];
+
+// Получаем ссылку на элемент списка
+var messageList = document.getElementById('messageList');
+
+// Используем цикл для создания элементов списка
+messages.forEach(function(message) {
+  var li = document.createElement('li');
+  li.textContent = message;
+  messageList.appendChild(li);
+});
+
 </script>
     <div class="body-wrap boxed-container">
         <header class="site-header">
@@ -427,6 +440,7 @@ connection.start()
 	                        </div>
 						</div>
                     </div>
+					<ul id="messageList"></ul>
                 </div>
             </section>
         </main>
