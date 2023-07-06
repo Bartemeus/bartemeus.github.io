@@ -26,7 +26,7 @@ function myFunction() {
     });
 }
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl("ner.kz/api/chatHub")
+    .withUrl("/api/chatHub")
     .build();
 
 connection.on("ReceiveMessage", (user, message) => {
