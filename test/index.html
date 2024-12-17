@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Functional Table</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Interactive Data Table</h1>
+    <!-- Controls for filtering and entries per page -->
+    <div class="controls">
+      <label>
+        Search: 
+        <input type="text" id="searchInput" placeholder="Type to filter...">
+      </label>
+      <label>
+        Show Entries: 
+        <select id="entriesSelect">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+        </select>
+      </label>
+      <!-- Column Toggle Buttons -->
+      <div id="columnToggles"></div>
+    </div>
+
+    <!-- Table -->
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th data-key="id">ID</th>
+          <th data-key="name">Name</th>
+          <th data-key="age">Age</th>
+          <th data-key="city">City</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div class="pagination">
+      <button id="prevPage">Previous</button>
+      <span id="pageInfo"></span>
+      <button id="nextPage">Next</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

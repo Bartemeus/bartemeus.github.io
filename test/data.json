@@ -1,0 +1,8 @@
+
+[
+    { "id": 1, "name": "John Doe", "age": 28, "city": "New York" },
+    { "id": 2, "name": "Jane Smith", "age": 34, "city": "Los Angeles" },
+    { "id": 3, "name": "Alice Johnson", "age": 23, "city": "Chicago" },
+    { "id": 4, "name": "Bob Brown", "age": 45, "city": "Houston" },
+    { "id": 5, "name": "Charlie Green", "age": 30, "city": "Phoenix" }
+  ]
