@@ -1,516 +1,713 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Создание сайтов, разработка веб-сайтов.</title>
-	<meta name="description" content="Кто отравил Сократа, сжег Жанну д’Арк, распял Христа, закопал Мухаммеда в верблюжьих останках? Толпа. Значит, у толпы нет ума. Сумей направить ее на путь истины.">
-	<meta name="keywords" content="Anime, Video, News">  
-    <link href="https://fonts.googleapis.com/css?family=Heebo:400,400i,500,700|Titillium+Web:600" rel="stylesheet">
-    <link rel="stylesheet" href="dist/css/style.css">
-    <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STATBANK | Кредитный консультант по коммерческому кредитованию в Казахстане</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0a0e1a',
+                            primary: '#1e3a8a',
+                            accent: '#3b82f6',
+                            gold: '#d4af37',
+                            surface: '#111827',
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'hero-pattern': "url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%233b82f6\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0e1a;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -15px rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+        
+        .grid-lines {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+        }
+        
+        .map-pulse {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        
+        .stat-number {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .nav-scrolled {
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+        }
+        
+        .gold-accent {
+            color: #d4af37;
+        }
+        
+        .step-connector {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, transparent);
+            transform: translateY(-50%);
+        }
+        
+        @media (max-width: 768px) {
+            .step-connector { display: none; }
+        }
+    </style>
 </head>
-<body class="is-boxed">
-	<script>
-function myFunction() {
-  //document.getElementById("demo").innerHTML = "Hello World";
-	connection.invoke("SendMessage", "Ner", document.getElementById('qta_field').value);
-  fetch('/api/NerzulBot/post', {
-      method: 'post',
-      headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-      body: JSON.stringify(document.getElementById('qta_field').value)
-    });
-}
-const connection = new signalR.HubConnectionBuilder()
-    .withUrl("/api/chatHub")
-    .build();
+<body class="font-sans antialiased">
 
-connection.on("ReceiveMessage", (user, message) => {
-    // console.log(user + " says: " + message);
-	var li = document.createElement('li');
-		li.textContent = user + " says: " + message;
-		messageList.appendChild(li);
-});
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white text-xl">S</div>
+                    <span class="font-display font-bold text-2xl tracking-tight text-white">STAT<span class="text-blue-500">BANK</span></span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#services" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Услуги</a>
+                    <a href="#expertise" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Экспертиза</a>
+                    <a href="#process" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Процесс</a>
+                    <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-medium transition-all transform hover:scale-105">
+                        Бесплатная консультация
+                    </a>
+                </div>
+                
+                <button id="mobile-menu-btn" class="md:hidden text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-connection.start()
-    .then(() => {
-        connection.invoke("SendMessage", "Ner", "Hello, World!");
-    })
-    .catch(error => {
-        console.error(error);
-    });
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden grid-lines">
+        <div class="absolute inset-0 bg-gradient-to-b from-blue-900/20 via-transparent to-brand-dark"></div>
+        <div class="absolute top-20 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-72 h-72 bg-yellow-500/5 rounded-full blur-3xl"></div>
+        
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
+            <div class="inline-flex items-center px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-8 reveal">
+                <span class="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></span>
+                Февраль 2026 • Казахстан
+            </div>
+            
+            <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight reveal">
+                <span class="block text-white">КРЕДИТНЫЙ</span>
+                <span class="gradient-text">КОНСУЛЬТАНТ</span>
+            </h1>
+            
+            <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-12 font-light reveal">
+                По получению коммерческого кредита в Казахстане
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center reveal">
+                <a href="#contact" class="group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all transform hover:scale-105 flex items-center">
+                    Начать проект
+                    <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+                <a href="#services" class="text-gray-400 hover:text-white px-8 py-4 rounded-full font-medium text-lg border border-gray-700 hover:border-gray-500 transition-all">
+                    Узнать больше
+                </a>
+            </div>
 
-</script>
-    <div class="body-wrap boxed-container">
-        <header class="site-header">
-            <div class="container">
-                <div class="site-header-inner">
-                    <div class="brand header-brand">
-                        <h1 class="m-0">
-                            <a href="/treditor.html>
-								<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-								    <title>Ner</title>
-								    <defs>
-								        <linearGradient x1="0%" y1="0%" y2="100%" id="logo-a">
-								            <stop stop-color="#4353FF" offset="0%"/>
-								            <stop stop-color="#4353FF" stop-opacity=".32" offset="100%"/>
-								        </linearGradient>
-								        <linearGradient x1="0%" y1="0%" y2="100%" id="logo-b">
-								            <stop stop-color="#4353FF" offset="0%"/>
-								            <stop stop-color="#4353FF" stop-opacity=".32" offset="100%"/>
-								        </linearGradient>
-								        <linearGradient x1="0%" y1="0%" y2="100%" id="logo-c">
-								            <stop stop-color="#78F9FF" stop-opacity=".24" offset="0%"/>
-								            <stop stop-color="#43F1FF" offset="55.496%"/>
-								            <stop stop-color="#43F1FF" stop-opacity=".24" offset="100%"/>
-								        </linearGradient>
-								    </defs>
-								    <g fill="none" fill-rule="evenodd">
-								        <path d="M4 0h12v16H0V4a4 4 0 0 1 4-4z" fill="url(#logo-a)"/>
-								        <path d="M16 16h16v12a4 4 0 0 1-4 4H16V16z" fill="url(#logo-b)"/>
-								        <path d="M11.5 20.5H.5v1h10v10h1v-11z" stroke="url(#logo-c)" transform="matrix(-1 0 0 1 12 0)"/>
-								        <path d="M31.5.5h-11v1h10v10h1V.5z" stroke="url(#logo-c)" transform="matrix(1 0 0 -1 0 12)"/>
-								    </g>
-								</svg>
-                            </a>
-                        </h1>
+            <!-- Stats Grid -->
+            <div class="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto reveal">
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold text-white stat-number" data-target="2">$2</div>
+                    <div class="text-sm text-gray-500 mt-1">млн мин. проект</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold text-white stat-number" data-target="400">$400</div>
+                    <div class="text-sm text-gray-500 mt-1">млн макс. проект</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold text-white stat-number" data-target="1000">1000+</div>
+                    <div class="text-sm text-gray-500 mt-1">проектов</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold text-white stat-number" data-target="10">10+</div>
+                    <div class="text-sm text-gray-500 mt-1">лет опыта</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </section>
+
+    <!-- CEO Section -->
+    <section class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="relative reveal">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-blue-600 to-yellow-600 rounded-2xl opacity-20 blur-2xl"></div>
+                    <div class="relative glass-panel rounded-2xl p-8 md:p-12">
+                        <div class="flex items-start justify-between mb-8">
+                            <div>
+                                <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-2">Усманов Нурсултан</h2>
+                                <p class="text-blue-400 text-lg font-medium">CEO и основатель Statbank</p>
+                            </div>
+                            <div class="hidden md:block text-right">
+                                <div class="text-5xl font-bold text-gray-800">10+</div>
+                                <div class="text-gray-600">лет практики</div>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-300 text-lg leading-relaxed mb-8">
+                            Инвестиционно-банковская бутик-фирма в сфере кредитования инвестпроектов в таких отраслях как АПК, металлургия, машиностроение, химия, складирование, туризм.
+                        </p>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center text-gray-400">
+                                <svg class="w-5 h-5 mr-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span>Образование в топовых университетах США, Великобритании, Швейцарии, ОАЭ и Китая</span>
+                            </div>
+                            <div class="flex items-center text-gray-400">
+                                <svg class="w-5 h-5 mr-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span>Финансовый адвокат с фокусом на оптимальных условиях</span>
+                            </div>
+                            <div class="flex items-center text-gray-400">
+                                <svg class="w-5 h-5 mr-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span>Личный контроль и гарантия качества каждого проекта</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative reveal">
+                    <h3 class="font-display text-2xl font-bold text-white mb-8">География проектов</h3>
+                    <div class="relative h-96 glass-panel rounded-2xl overflow-hidden p-8">
+                        <!-- Interactive Map Visualization -->
+                        <div class="absolute inset-0 opacity-30">
+                            <svg viewBox="0 0 800 400" class="w-full h-full">
+                                <path d="M 100 200 Q 200 150 300 180 T 500 160 T 700 200" stroke="#3b82f6" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+                                <circle cx="150" cy="180" r="4" fill="#d4af37" class="map-pulse"/>
+                                <circle cx="300" cy="170" r="4" fill="#d4af37"/>
+                                <circle cx="450" cy="160" r="6" fill="#3b82f6" class="map-pulse"/>
+                                <circle cx="600" cy="190" r="4" fill="#d4af37"/>
+                                <circle cx="720" cy="210" r="4" fill="#d4af37"/>
+                            </svg>
+                        </div>
+                        
+                        <div class="relative z-10 grid grid-cols-2 gap-4">
+                            <div class="glass-panel p-4 rounded-xl border-l-4 border-blue-500">
+                                <div class="font-bold text-white">Казахстан</div>
+                                <div class="text-sm text-gray-400">Базовый рынок</div>
+                            </div>
+                            <div class="glass-panel p-4 rounded-xl border-l-4 border-yellow-500">
+                                <div class="font-bold text-white">Узбекистан</div>
+                                <div class="text-sm text-gray-400">34 млрд тенге</div>
+                            </div>
+                            <div class="glass-panel p-4 rounded-xl border-l-4 border-blue-400">
+                                <div class="font-bold text-white">Кыргызстан</div>
+                                <div class="text-sm text-gray-400">ГЭС и СЭС</div>
+                            </div>
+                            <div class="glass-panel p-4 rounded-xl border-l-4 border-yellow-400">
+                                <div class="font-bold text-white">Таджикистан</div>
+                                <div class="text-sm text-gray-400">LED-производство</div>
+                            </div>
+                            <div class="glass-panel p-4 rounded-xl border-l-4 border-gray-500">
+                                <div class="font-bold text-white">Армения</div>
+                                <div class="text-sm text-gray-400">Возобновляемая энергия</div>
+                            </div>
+                            <div class="glass-panel p-4 rounded-xl border-l-4 border-gray-600">
+                                <div class="font-bold text-white">Литва, Беларусь, Россия</div>
+                                <div class="text-sm text-gray-400">Расширение</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </header>
+        </div>
+    </section>
 
-        <main>
-            <section class="hero">
-                <div class="container">
-                    <div class="hero-inner">
-						<div class="hero-copy">
-	                        <h1 class="hero-title mt-0 is-revealing">Разработка приложений любой сложности</h1>
-	                        <p class="hero-paragraph is-revealing">Приветствуем вас на сайте разработки, где мы превращаем вашу идею в реальность. Мы команда опытных разработчиков, готовых помочь вам создать высококачественные и инновационные веб-приложения, мобильные приложения и сайты.</p>
-							<div class="hero-form field field-grouped is-revealing">
-	                            <div class="control control-expanded">
-	                                <input class="input" type="email" id="qta_field" name="email" placeholder="Your best email&hellip;">
-	                            </div>
-	                            <div class="control">
-	                                <a class="button button-primary button-block" onclick="myFunction()">Связаться с нами</a>
-	                            </div>
-	                        </div>
-						</div>
-						<div class="hero-illustration">
-							<div class="hero-bg">
-								<svg width="720" height="635" xmlns="http://www.w3.org/2000/svg">
-								    <defs>
-								        <linearGradient x1="50%" y1="0%" x2="50%" y2="97.738%" id="a">
-								            <stop stop-color="#151616" offset="0%"/>
-								            <stop stop-color="#222424" offset="100%"/>
-								        </linearGradient>
-								    </defs>
-								    <path d="M0 0h720v504.382L279.437 630.304c-53.102 15.177-108.454-15.567-123.631-68.669-.072-.25-.142-.5-.211-.75L0 0z" fill="url(#a)" fill-rule="evenodd"/>
-								</svg>
-							</div>
-							<div class="hero-square hero-square-1 is-moving-object is-rotating">
-								<svg width="220" height="220" xmlns="http://www.w3.org/2000/svg">
-									<defs>
-										<linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="square-1-a">
-											<stop stop-color="#4353FF" offset="0%"/>
-											<stop stop-color="#4353FF" stop-opacity=".32" offset="100%"/>
-										</linearGradient>
-										<linearGradient x1="18.74%" y1="17.384%" x2="96.787%" y2="88.669%" id="square-1-b">
-											<stop stop-color="#43F1FF" stop-opacity="0" offset="0%"/>
-											<stop stop-color="#43F1FF" offset="53.489%"/>
-											<stop stop-color="#43F1FF" stop-opacity="0" offset="100%"/>
-										</linearGradient>
-									</defs>
-									<g fill="none" fill-rule="evenodd">
-										<path fill="url(#square-1-a)" opacity=".64" d="M0 0h220v220H0z"/>
-										<path d="M0 65.022V61.7c51.102-26.116 77.322-13.388 77.322 38.41 0 57.718 25.944 67.701 79.782 30.373l1.709 2.466c-55.678 38.604-84.491 27.517-84.491-32.839 0-49.494-24.315-61.27-74.322-35.087z" fill="url(#square-1-b)" fill-rule="nonzero" opacity=".701"/>
-										<path d="M113.203 220c2.943-57.607 37.666-164 90.473-164 4.973 0 10.458.203 16.324.614v77.24c-5.819.237-11.3 1.007-16.324 2.458-32.685 9.44-57.608 55.87-72.976 83.688h-17.497z" fill-opacity=".096" fill="#43F1FF"/>
-									</g>
-								</svg>
-							</div>
-							<div class="hero-square hero-square-2 is-moving-object is-rotating">
-								<svg width="88" height="88" xmlns="http://www.w3.org/2000/svg">
-									<defs>
-										<linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="square-2-a">
-											<stop stop-color="#4353FF" offset="0%"/>
-											<stop stop-color="#4353FF" stop-opacity=".32" offset="100%"/>
-										</linearGradient>
-										<linearGradient x1="-31.43%" y1="104.265%" x2="143.71%" y2="43.581%" id="square-2-b">
-											<stop stop-color="#43F1FF" stop-opacity=".24" offset="0%"/>
-											<stop stop-color="#43F1FF" stop-opacity=".16" offset="100%"/>
-										</linearGradient>
-									</defs>
-									<g fill="none" fill-rule="evenodd">
-										<path fill="url(#square-2-a)" d="M0 0h88v88H0z"/>
-										<path d="M19.717 36.579C13.824 33.969 7.004 32.555 0 31.535V0h88v88H76.869C59.773 67.766 40.697 45.872 19.717 36.579z" fill="url(#square-2-b)"/>
-									</g>
-								</svg>
-							</div>
-							<div class="hero-square hero-square-3 is-moving-object is-rotating">
-								<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
-								    <defs>
-								        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="square-3-a">
-								            <stop stop-color="#4353FF" offset="0%"/>
-								            <stop stop-color="#4353FF" stop-opacity=".16" offset="100%"/>
-								        </linearGradient>
-								        <linearGradient x1="-58.825%" y1="39.622%" x2="81.589%" y2="-11.971%" id="square-3-b">
-								            <stop stop-color="#43F1FF" stop-opacity=".24" offset="0%"/>
-								            <stop stop-color="#43F1FF" stop-opacity=".163" offset="100%"/>
-								        </linearGradient>
-								    </defs>
-								    <g fill="none" fill-rule="evenodd" opacity=".64">
-								        <path fill="url(#square-3-a)" d="M0 0h64v64H0z"/>
-								        <path d="M14.03 0C27.176 13.07 42 27.791 42 38.165c0 17.46-14.154-11.127-31.614-11.127-2.67 0-6.289.931-10.386 2.406V0h14.03z" fill="url(#square-3-b)"/>
-								    </g>
-								</svg>
-							</div>
-							<div class="hero-square hero-square-4 is-moving-object is-rotating">
-								<svg width="320" height="320" xmlns="http://www.w3.org/2000/svg">
-								    <defs>
-								        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="square-4-a">
-								            <stop stop-color="#4353FF" offset="0%"/>
-								            <stop stop-color="#4353FF" stop-opacity=".32" offset="100%"/>
-								        </linearGradient>
-								        <linearGradient x1="18.74%" y1="17.384%" x2="96.787%" y2="88.669%" id="square-4-b">
-								            <stop stop-color="#43F1FF" stop-opacity="0" offset="0%"/>
-								            <stop stop-color="#43F1FF" offset="53.489%"/>
-								            <stop stop-color="#43F1FF" stop-opacity="0" offset="100%"/>
-								        </linearGradient>
-								        <linearGradient x1="0%" y1="57.64%" x2="94.346%" y2="8.32%" id="square-4-c">
-								            <stop stop-color="#43F1FF" stop-opacity=".24" offset="0%"/>
-								            <stop stop-color="#43F1FF" stop-opacity=".16" offset="100%"/>
-								        </linearGradient>
-								        <radialGradient cx="100%" cy="100%" fx="100%" fy="100%" r="136.8%" id="square-4-d">
-								            <stop stop-color="#43F1FF" offset="0%"/>
-								            <stop stop-color="#43F1FF" stop-opacity="0" offset="100%"/>
-								        </radialGradient>
-								        <radialGradient cx="100%" cy="100%" fx="100%" fy="100%" r="140.264%" id="square-4-e">
-								            <stop stop-color="#43F1FF" offset="0%"/>
-								            <stop stop-color="#43F1FF" stop-opacity="0" offset="100%"/>
-								        </radialGradient>
-								        <radialGradient cx="100%" cy="100%" fx="100%" fy="100%" r="137.638%" id="square-4-f">
-								            <stop stop-color="#43F1FF" offset="0%"/>
-								            <stop stop-color="#43F1FF" stop-opacity="0" offset="100%"/>
-								        </radialGradient>
-								    </defs>
-								    <g fill="none" fill-rule="evenodd">
-								        <rect fill="url(#square-4-a)" width="320" height="320" rx="2"/>
-								        <path d="M278.958 209.715c-54.758 37.966-82.136 27.43-82.136-31.606s-34.335-65.905-103.005-20.607C49.492 185.246 33.604 160.412 46.154 83" stroke="url(#square-4-b)" stroke-width="3"/>
-								        <path d="M71.05 41.844c57.243-16.532 154.657 38.697 154.657-16.532 0-8.934-4.692-17.934-10.123-25.312H0v99.92c19.6-22.665 44.942-50.536 71.05-58.076z" fill="url(#square-4-c)"/>
-								        <path d="M320 320V66C179.72 66 66 179.72 66 320h254z" fill="url(#square-4-d)" opacity=".16"/>
-								        <path d="M320 320V131c-104.382 0-189 84.618-189 189h189z" fill="url(#square-4-e)" opacity=".32"/>
-								        <path d="M320 320V196c-68.483 0-124 55.517-124 124h124z" fill="url(#square-4-f)"/>
-								    </g>
-								</svg>
-							</div>
-							<div class="hero-square hero-square-5 is-moving-object is-rotating">
-								<svg width="141" height="140" xmlns="http://www.w3.org/2000/svg">
-								    <defs>
-								        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="square-5-a">
-								            <stop stop-color="#4353FF" offset="0%"/>
-								            <stop stop-color="#4353FF" stop-opacity=".32" offset="100%"/>
-								        </linearGradient>
-								        <linearGradient x1="27.288%" y1="50%" x2="172.696%" y2="-8.701%" id="square-5-b">
-								            <stop stop-color="#43F1FF" stop-opacity=".24" offset="0%"/>
-								            <stop stop-color="#43F1FF" stop-opacity=".16" offset="100%"/>
-								        </linearGradient>
-								        <linearGradient x1="18.74%" y1="17.384%" x2="96.787%" y2="88.669%" id="square-5-c">
-								            <stop stop-color="#43F1FF" stop-opacity="0" offset="0%"/>
-								            <stop stop-color="#43F1FF" offset="53.489%"/>
-								            <stop stop-color="#43F1FF" stop-opacity="0" offset="100%"/>
-								        </linearGradient>
-								    </defs>
-								    <g fill="none" fill-rule="evenodd">
-								        <path opacity=".24" fill="url(#square-5-a)" d="M19 18h128v128H19z" transform="translate(-6 -6)"/>
-								        <path d="M147 76.088V18h-35.004c-4.63 24.206-16.838 55.057-44.819 79.224-63.217 54.6 46.59-21.136 79.823-21.136z" opacity=".24" fill="url(#square-5-b)" transform="translate(-6 -6)"/>
-								        <path d="M0 0l39.459 40.249" stroke="url(#square-5-c)" stroke-width="3" transform="translate(-6 -6)"/>
-								    </g>
-								</svg>
-							</div>
-							<div class="hero-square hero-square-6 is-moving-object is-rotating">
-								<svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
-								    <defs>
-								        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="square-6-a">
-								            <stop stop-color="#4353FF" offset="0%"/>
-								            <stop stop-color="#4353FF" stop-opacity=".32" offset="100%"/>
-								        </linearGradient>
-								        <linearGradient x1="14.98%" y1="57.941%" x2="95.966%" y2="33.366%" id="square-6-b">
-								            <stop stop-color="#43F1FF" stop-opacity=".24" offset="0%"/>
-								            <stop stop-color="#43F1FF" stop-opacity=".16" offset="100%"/>
-								        </linearGradient>
-								        <linearGradient x1="97.033%" y1="97.033%" x2="0%" y2="0%" id="square-6-c">
-								            <stop stop-color="#43F1FF" offset="0%"/>
-								            <stop stop-color="#43F1FF" stop-opacity=".24" offset="100%"/>
-								        </linearGradient>
-								        <linearGradient x1="18.74%" y1="17.384%" x2="96.787%" y2="88.669%" id="square-6-d">
-								            <stop stop-color="#43F1FF" stop-opacity="0" offset="0%"/>
-								            <stop stop-color="#43F1FF" offset="53.489%"/>
-								            <stop stop-color="#43F1FF" stop-opacity="0" offset="100%"/>
-								        </linearGradient>
-								    </defs>
-								    <g fill="none" fill-rule="evenodd">
-								        <path fill="url(#square-6-a)" d="M0 0h128v128H0z"/>
-								        <path d="M27.652 128H0V32.762c13.602-4.224 26.559-6.606 36.988-6.606 42.25 0-38.976 13.508-19.488 50.235C25.002 90.529 28.544 109.73 27.652 128z" fill="url(#square-6-b)"/>
-								        <path fill="url(#square-6-c)" opacity=".32" d="M88 88h40v40H88z"/>
-								        <path d="M69 68l39.459 40.249" stroke="url(#square-6-d)" stroke-width="3"/>
-								    </g>
-								</svg>
-							</div>
-							<div class="hero-square hero-square-7 is-moving-object is-rotating">
-								<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
-								    <defs>
-								        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="square-7-a">
-								            <stop stop-color="#4353FF" offset="0%"/>
-								            <stop stop-color="#4353FF" stop-opacity=".32" offset="100%"/>
-								        </linearGradient>
-								        <radialGradient cx="-5.754%" cy="67.691%" fx="-5.754%" fy="67.691%" r="140.869%" gradientTransform="scale(-1 -.64163) rotate(55.582 1.643 -.08)" id="square-7-b">
-								            <stop stop-color="#43F1FF" offset="0%"/>
-								            <stop stop-color="#43F1FF" stop-opacity="0" offset="100%"/>
-								        </radialGradient>
-								        <linearGradient x1="0%" y1="23.176%" x2="96.787%" y2="88.669%" id="square-7-c">
-								            <stop stop-color="#43F1FF" stop-opacity="0" offset="0%"/>
-								            <stop stop-color="#43F1FF" offset="32.912%"/>
-								            <stop stop-color="#43F1FF" stop-opacity="0" offset="100%"/>
-								        </linearGradient>
-								    </defs>
-								    <g fill="none" fill-rule="evenodd" opacity=".601">
-								        <path fill="url(#square-7-a)" d="M0 0h64v64H0z"/>
-								        <path d="M0 64V.1C22.901 1.644 41 20.709 41 44c0 7.202-1.73 14-4.798 20H0z" fill="url(#square-7-b)"/>
-								        <path d="M63.925 58.495c-4.136-2.459-9.143-4.747-15.272-6.916-23.745-8.402-32.768-20.182-27.972-32.9 2.7-7.16 9.914-13.947 18.763-18.679h7.221c-10.84 4.263-20.209 11.866-23.177 19.737-4.076 10.81 3.808 21.103 26.166 29.014 5.524 1.955 10.252 4.048 14.271 6.3v3.444z" fill="url(#square-7-c)" fill-rule="nonzero"/>
-								    </g>
-								</svg>
-							</div>
-							<div class="hero-square hero-square-8 is-moving-object is-rotating">
-								<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg">
-								    <defs>
-								        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="square-8-a">
-								            <stop stop-color="#4353FF" offset="0%"/>
-								            <stop stop-color="#4353FF" stop-opacity=".32" offset="100%"/>
-								        </linearGradient>
-								        <linearGradient x1="66.071%" y1="50%" x2="168.952%" y2="11.585%" id="square-8-b">
-								            <stop stop-color="#43F1FF" stop-opacity=".123" offset="0%"/>
-								            <stop stop-color="#43F1FF" stop-opacity=".16" offset="100%"/>
-								        </linearGradient>
-								    </defs>
-								    <g fill="none" fill-rule="evenodd">
-								        <path fill="url(#square-8-a)" opacity=".24" d="M0 0h40v40H0z"/>
-								        <path d="M40 0h-4.67c-.999 7.225-3.804 17.536-12.85 25.35-15.393 13.294 5.041-.287 17.36-4.644L40 0z" fill="url(#square-8-b)"/>
-								    </g>
-								</svg>
-							</div>
-							<div class="hero-dots hero-dots-1 is-moving-object is-translating" data-translating-factor="160">
-								<svg width="279" height="97" xmlns="http://www.w3.org/2000/svg">
-								    <g fill="#43F1FF" fill-rule="evenodd">
-								        <path d="M71.686 0l-2.899 1.334L68 4.157l.926 2.688L71.686 8l2.6-1.31L76 4.156l-1.295-2.94z"/>
-								        <path fill-opacity=".64" d="M38.843 2l-1.45.667L37 4.079l.463 1.344 1.38.577 1.3-.655L41 4.079l-.648-1.47z"/>
-								        <path fill-opacity=".24" d="M65.843 55l-1.45.667L64 57.079l.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47z"/>
-								        <path fill-opacity=".64" d="M94.765 29l-2.175 1-.59 2.118.695 2.016 2.07.866 1.95-.983 1.285-1.9-.972-2.204z"/>
-								        <path fill-opacity=".8" d="M58.765 25l-2.175 1-.59 2.118.695 2.016 2.07.866 1.95-.983 1.285-1.9-.972-2.204z"/>
-								        <path fill-opacity=".48" d="M18.843 44l-1.45.667L17 46.079l.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47z"/>
-								        <path fill-opacity=".64" d="M8.843 29l-1.45.667L7 31.079l.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47z"/>
-								        <path fill-opacity=".48" d="M32.843 29l-1.45.667L31 31.079l.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47zM.922 45l-.725.333L0 46.04l.232.672.69.289.65-.328L2 46.04l-.324-.735z"/>
-								        <path fill-opacity=".24" d="M267.843 93l-1.45.667-.393 1.412.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47z"/>
-								        <path fill-opacity=".8" d="M275.765 75l-2.175 1-.59 2.118.695 2.016 2.07.866 1.95-.983 1.285-1.9-.972-2.204z"/>
-								        <path fill-opacity=".48" d="M259.843 78l-1.45.667-.393 1.412.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47z"/>
-								    </g>
-								</svg>
-							</div>
-							<div class="hero-dots hero-dots-2 is-moving-object is-translating" data-translating-factor="120">
-								<svg width="138" height="132" xmlns="http://www.w3.org/2000/svg">
-								    <g fill="#43F1FF" fill-rule="evenodd">
-								        <path d="M73.686 66l-2.899 1.334L70 70.157l.926 2.688L73.686 74l2.6-1.31L78 70.156l-1.295-2.94z"/>
-								        <path fill-opacity=".64" d="M108.843 0l-1.45.667L107 2.079l.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47z"/>
-								        <path fill-opacity=".24" d="M135.843 53l-1.45.667-.393 1.412.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47z"/>
-								        <path fill-opacity=".64" d="M107.765 53l-2.175 1-.59 2.118.695 2.016 2.07.866 1.95-.983 1.285-1.9-.972-2.204z"/>
-								        <path fill-opacity=".8" d="M128.765 23l-2.175 1-.59 2.118.695 2.016 2.07.866 1.95-.983 1.285-1.9-.972-2.204z"/>
-								        <path fill-opacity=".48" d="M88.843 42l-1.45.667L87 44.079l.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47z"/>
-								        <path fill-opacity=".64" d="M78.843 27l-1.45.667L77 29.079l.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47z"/>
-								        <path fill-opacity=".48" d="M102.843 27l-1.45.667-.393 1.412.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47zM70.922 43l-.725.333-.197.706.232.672.69.289.65-.328.428-.633-.324-.735z"/>
-								        <path d="M2.765 126L.59 127 0 129.118l.695 2.016 2.07.866 1.95-.983 1.285-1.9-.972-2.204z"/>
-								        <path fill-opacity=".64" d="M24.843 127l-1.45.667-.393 1.412.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47z"/>
-								        <path fill-opacity=".48" d="M6.922 114l-.725.333-.197.706.232.672.69.289.65-.328.428-.633-.324-.735z"/>
-								    </g>
-								</svg>
-							</div>
-							<div class="hero-dots hero-dots-3 is-moving-object is-translating" data-translating-factor="160">
-								<svg width="98" height="59" xmlns="http://www.w3.org/2000/svg">
-								    <g fill="#43F1FF" fill-rule="evenodd">
-								        <path d="M26.314 0l2.899 1.334L30 4.157l-.926 2.688L26.314 8l-2.6-1.31L22 4.156l1.295-2.94z"/>
-								        <path fill-opacity=".64" d="M59.157 2l1.45.667L61 4.079l-.463 1.344-1.38.577-1.3-.655L57 4.079l.648-1.47z"/>
-								        <path fill-opacity=".24" d="M32.157 55l1.45.667.393 1.412-.463 1.344-1.38.577-1.3-.655L30 57.079l.648-1.47z"/>
-								        <path fill-opacity=".64" d="M3.235 29l2.175 1L6 32.118l-.695 2.016-2.07.866-1.95-.983L0 32.117l.972-2.204z"/>
-								        <path fill-opacity=".8" d="M39.235 25l2.175 1 .59 2.118-.695 2.016-2.07.866-1.95-.983-1.285-1.9.972-2.204z"/>
-								        <path fill-opacity=".48" d="M79.157 44l1.45.667.393 1.412-.463 1.344-1.38.577-1.3-.655L77 46.079l.648-1.47z"/>
-								        <path fill-opacity=".64" d="M89.157 29l1.45.667.393 1.412-.463 1.344-1.38.577-1.3-.655L87 31.079l.648-1.47z"/>
-								        <path fill-opacity=".48" d="M65.157 29l1.45.667.393 1.412-.463 1.344-1.38.577-1.3-.655L63 31.079l.648-1.47zM97.078 45l.725.333.197.706-.232.672-.69.289-.65-.328L96 46.04l.324-.735z"/>
-								    </g>
-								</svg>
-							</div>
-							<div class="hero-line hero-line-1">
-								<svg width="344" height="217" xmlns="http://www.w3.org/2000/svg">
-								    <defs>
-								        <linearGradient x1="18.74%" y1="17.384%" x2="96.787%" y2="88.669%" id="line-1-a">
-								            <stop stop-color="#5D6AFF" stop-opacity="0" offset="0%"/>
-								            <stop stop-color="#5D6AFF" offset="53.489%"/>
-								            <stop stop-color="#5D6AFF" stop-opacity="0" offset="100%"/>
-								        </linearGradient>
-								    </defs>
-								    <path d="M340.86 180.664l2.281 3.287c-79.796 55.378-120.994 39.511-120.994-47.035 0-82.777-47.283-92.246-144.735-27.901-32.607 20.428-55.391 21.53-67.544 2.516C-1.882 93.147-3.092 56.053 5.987 0l3.948.64c-8.928 55.125-7.743 91.453 3.303 108.736 10.644 16.653 31.058 15.666 62.01-3.725 99.65-65.797 150.9-55.534 150.9 31.265 0 83.03 37.371 97.424 114.713 43.748z" fill="url(#line-1-a)" fill-rule="nonzero" transform="matrix(-1 0 0 1 343.141 0)"/>
-								</svg>
-							</div>
-						</div>
+    <!-- Experience Timeline -->
+    <section class="py-24 bg-brand-surface/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">Экспертный опыт</h2>
+                <p class="text-gray-400 text-lg">Успешное сопровождение сложных инвестпроектов</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass-panel rounded-2xl p-8 card-hover reveal">
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-blue-400 font-bold text-lg">2020-2024</span>
+                        <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm">На инвестпроекты</span>
                     </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Проекты развития</h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <span>Производство LED-продукции в Таджикистане</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <span>Проекты ГЭС и СЭС в Кыргызстане, Армении и Казахстане ($11-50 млн)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <span>Гостинично-туристические комплексы (свыше 10 млрд тенге)</span>
+                        </li>
+                    </ul>
                 </div>
-            </section>
-
-            <section class="features section">
-                <div class="container">
-                    <div class="features-inner section-inner">
-						<ul id="messageList" style="position: absolute; right: -100%;"></ul>
-
-						<div class="features-wrap">
-	                        <div class="feature">
-	                            <div class="feature-inner">
-									<div class="feature-header mb-16">
-										<div class="feature-icon mr-16">
-											<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
-											    <g fill-rule="nonzero" fill="none">
-											        <path d="M7 8H1a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1zM19 8h-6a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1z" fill="#4353FF"/>
-											        <path d="M19 20h-6a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1z" fill="#43F1FF"/>
-											        <path d="M31 8h-6a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1z" fill="#4353FF"/>
-											        <path d="M7 20H1a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1z" fill="#43F1FF"/>
-											        <path d="M7 32H1a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1z" fill="#4353FF"/>
-											        <path d="M29.5 18h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5z" fill="#43F1FF"/>
-											        <path d="M17.5 30h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5zM29.5 30h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5z" fill="#4353FF"/>
-											    </g>
-											</svg>
-		                                </div>
-		                                <h4 class="feature-title m-0">Develop</h4>
-									</div>
-	                                <p class="text-sm mb-0">Индивидуальный подход: Мы понимаем, что каждый проект уникален. Поэтому мы тщательно изучаем ваши требования и цели, чтобы предложить вам наилучшие решения, соответствующие вашим потребностям.</p>
-	                            </div>
-	                        </div>
-							<div class="feature">
-	                            <div class="feature-inner">
-									<div class="feature-header mb-16">
-										<div class="feature-icon mr-16">
-											<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
-											    <g fill-rule="nonzero" fill="none">
-											        <path d="M4 12H0V5a5.006 5.006 0 0 1 5-5h7v4H5a1 1 0 0 0-1 1v7z" fill="#43F1FF"/>
-											        <path d="M32 12h-4V5a1 1 0 0 0-1-1h-7V0h7a5.006 5.006 0 0 1 5 5v7zM12 32H5a5.006 5.006 0 0 1-5-5v-7h4v7a1 1 0 0 0 1 1h7v4z" fill="#4353FF"/>
-											        <path d="M27 32h-7v-4h7a1 1 0 0 0 1-1v-7h4v7a5.006 5.006 0 0 1-5 5z" fill="#43F1FF"/>
-											    </g>
-											</svg>
-		                                </div>
-		                                <h4 class="feature-title m-0">Discover</h4>
-									</div>
-	                                <p class="text-sm mb-0">Внимание к деталям: Мы уделяем особое внимание каждой детали проекта. Мы стремимся к превосходству в дизайне, пользовательском опыте и функциональности, чтобы ваше веб-приложение или сайт были не только привлекательными, но и удобными в использовании.</p>
-	                            </div>
-	                        </div>
-							<div class="feature">
-	                            <div class="feature-inner">
-									<div class="feature-header mb-16">
-										<div class="feature-icon mr-16">
-											<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
-											    <g fill="none" fill-rule="nonzero">
-											        <path d="M16 9c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4z" fill="#4353FF"/>
-											        <path d="M27 9c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4z" fill="#43F1FF"/>
-											        <path d="M27 12c-2.206 0-4 1.794-4 4s1.794 4 4 4 4-1.794 4-4-1.794-4-4-4z" fill="#4353FF"/>
-											        <path d="M5 23c-2.206 0-4 1.794-4 4s1.794 4 4 4 4-1.794 4-4-1.794-4-4-4z" fill="#43F1FF"/>
-											        <path d="M27 23c-1.859 0-3.41 1.28-3.858 3h-3.284A3.994 3.994 0 0 0 17 23.142v-3.284c1.72-.447 3-2 3-3.858 0-2.206-1.794-4-4-4-1.859 0-3.41 1.28-3.858 3H8.858A3.994 3.994 0 0 0 6 12.142V8.858c1.72-.447 3-2 3-3.858 0-2.206-1.794-4-4-4S1 2.794 1 5c0 1.858 1.28 3.41 3 3.858v3.284c-1.72.447-3 2-3 3.858 0 2.206 1.794 4 4 4 1.859 0 3.41-1.28 3.858-3h3.284A3.994 3.994 0 0 0 15 19.858v3.284c-1.72.447-3 2-3 3.858 0 2.206 1.794 4 4 4 1.859 0 3.41-1.28 3.858-3h3.284c.447 1.72 2 3 3.858 3 2.206 0 4-1.794 4-4s-1.794-4-4-4z" fill="#4353FF"/>
-											    </g>
-											</svg>
-		                                </div>
-		                                <h4 class="feature-title m-0">Design</h4>
-									</div>
-	                                <p class="text-sm mb-0">Стратегическое партнерство: Мы не просто разрабатываем проект и уходим. Мы готовы стать вашим долгосрочным партнером в сфере разработки, предлагая поддержку и обслуживание после запуска. Мы нацелены на ваш успех и готовы помочь вам расти и развиваться.</p>
-	                            </div>
-	                        </div>
-						</div>
-
+                
+                <div class="glass-panel rounded-2xl p-8 card-hover reveal">
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-yellow-500 font-bold text-lg">2020-2025</span>
+                        <span class="bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded-full text-sm">Кредит на экспорт</span>
                     </div>
-                </div>
-            </section>
-        </main>
-
-        <footer class="site-footer">
-			<div class="footer-bg">
-				<svg width="385" height="305" xmlns="http://www.w3.org/2000/svg">
-				    <defs>
-				        <linearGradient x1="50%" y1="34.994%" x2="50%" y2="97.738%" id="footer-bg">
-				            <stop stop-color="#151616" offset="0%"/>
-				            <stop stop-color="#222424" offset="100%"/>
-				        </linearGradient>
-				    </defs>
-				    <path d="M384.557 116.012V305H0L210.643 0l173.914 116.012z" fill="url(#footer-bg)" fill-rule="evenodd"/>
-				</svg>
-			</div>
-			<div class="footer-dots is-moving-object is-translating" data-translating-factor="160">
-				<svg width="69" height="91" xmlns="http://www.w3.org/2000/svg">
-				    <g fill="#43F1FF" fill-rule="evenodd">
-				        <path d="M37.105 41.007l-2.9 1.334-.786 2.823.926 2.689 2.76 1.154 2.6-1.31 1.714-2.533-1.296-2.94z"/>
-				        <path fill-opacity=".64" d="M63.109 27.24l-1.45.666-.394 1.412.464 1.344 1.38.577 1.3-.655.856-1.266-.647-1.47z"/>
-				        <path fill-opacity=".24" d="M66.226 86.638l-1.45.667-.393 1.412.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47z"/>
-				        <path fill-opacity=".64" d="M13.497 43.713l-2.175 1-.59 2.118.695 2.016 2.07.866 1.95-.983 1.285-1.9-.972-2.204z"/>
-				        <path fill-opacity=".8" d="M59.076 56.658l-2.175 1-.59 2.117.695 2.017 2.07.866 1.949-.983 1.286-1.9-.972-2.204z"/>
-				        <path fill-opacity=".48" d="M22.262 18.49l-1.45.667-.393 1.412.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47z"/>
-				        <path fill-opacity=".64" d="M23.422.5l-1.45.667-.393 1.412.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47z"/>
-				        <path fill-opacity=".48" d="M2.637 12.5l-1.45.667-.393 1.412.463 1.344 1.38.577 1.3-.655.857-1.266-.648-1.47zM36.563 10.856l-.725.334-.197.706.232.672.69.288.65-.327.428-.633-.324-.735z"/>
-				    </g>
-				</svg>
-			</div>
-            <div class="container">
-                <div class="site-footer-inner has-top-divider">
-                    <div class="footer-copyright">&copy; 2023 Ner, all rights reserved</div>
-					<ul class="footer-social-links list-reset">
-						<li>
-							<a href="/ner/stackblitz">
-								<span class="screen-reader-text">StackBlitz</span>
-								<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
-									<path d="M6.023 16L6 9H3V6h3V4c0-2.7 1.672-4 4.08-4 1.153 0 2.144.086 2.433.124v2.821h-1.67c-1.31 0-1.563.623-1.563 1.536V6H13l-1 3H9.28v7H6.023z" fill="#FFFFFF"/>
-								</svg>
-							</a>
-						</li>
-						<li>
-							<a href="https://telegram.me/nerzulbot" target="_blank">
-								<span class="screen-reader-text">Telegram</span>
-								<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
-									<path d="M16 3c-.6.3-1.2.4-1.9.5.7-.4 1.2-1 1.4-1.8-.6.4-1.3.6-2.1.8-.6-.6-1.5-1-2.4-1-1.7 0-3.2 1.5-3.2 3.3 0 .3 0 .5.1.7-2.7-.1-5.2-1.4-6.8-3.4-.3.5-.4 1-.4 1.7 0 1.1.6 2.1 1.5 2.7-.5 0-1-.2-1.5-.4C.7 7.7 1.8 9 3.3 9.3c-.3.1-.6.1-.9.1-.2 0-.4 0-.6-.1.4 1.3 1.6 2.3 3.1 2.3-1.1.9-2.5 1.4-4.1 1.4H0c1.5.9 3.2 1.5 5 1.5 6 0 9.3-5 9.3-9.3v-.4C15 4.3 15.6 3.7 16 3z" fill="#FFFFFF"/>
-								</svg>
-							</a>
-						</li>
-						<li>
-							<a href="tel:+77479777360">
-								<span class="screen-reader-text">Google</span>
-								<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
-									<path d="M7.9 7v2.4H12c-.2 1-1.2 3-4 3-2.4 0-4.3-2-4.3-4.4 0-2.4 2-4.4 4.3-4.4 1.4 0 2.3.6 2.8 1.1l1.9-1.8C11.5 1.7 9.9 1 8 1 4.1 1 1 4.1 1 8s3.1 7 7 7c4 0 6.7-2.8 6.7-6.8 0-.5 0-.8-.1-1.2H7.9z" fill="#FFFFFF"/>
-								</svg>
-							</a>
-						</li>
-					</ul>
+                    <h3 class="text-2xl font-bold text-white mb-4">Экспортное финансирование</h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-yellow-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <span>Предэкспортные операции (1-10 млрд тенге)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-yellow-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <span>Масложировая продукция, мука, макаронные изделия</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-yellow-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <span>Экспорт металлургии в Китай ($55 млн)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-yellow-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <span>Автотранспорт в Узбекистан (34 млрд тенге)</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </footer>
-    </div>
-	<script>
-		// Предположим, что у вас есть массив сообщений
-		var messages = ['Сообщение..'];
+        </div>
+    </section>
 
-		// Получаем ссылку на элемент списка
-		var messageList = document.getElementById('messageList');
+    <!-- Services Section -->
+    <section id="services" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">Брокерские услуги</h2>
+                <p class="text-gray-400 text-lg">По коммерческим кредитам</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 mb-16">
+                <!-- Service Card 1 -->
+                <div class="glass-panel rounded-2xl p-8 md:p-10 card-hover relative overflow-hidden reveal">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+                    <div class="relative">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold text-2xl">12,6%</div>
+                            <span class="text-gray-400">годовых</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Инвестиционные проекты</h3>
+                        <p class="text-gray-400 mb-6">Сопровождение в кредитовании инвестиционных проектов различного масштаба</p>
+                        <div class="flex items-center text-blue-400 font-semibold">
+                            <span>₸ 80 млн — ₸ 500 млрд</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Service Card 2 -->
+                <div class="glass-panel rounded-2xl p-8 md:p-10 card-hover relative overflow-hidden reveal">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-2xl"></div>
+                    <div class="relative">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="bg-yellow-600 text-white px-4 py-2 rounded-lg font-bold text-2xl">7%</div>
+                            <span class="text-gray-400">годовых</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Экспортные операции</h3>
+                        <p class="text-gray-400 mb-6">Финансирование экспортных и предэкспортных операций на пополнение оборотного капитала</p>
+                        <div class="flex items-center text-yellow-400 font-semibold">
+                            <span>от ₸ 1 млрд</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Government Support -->
+            <div class="glass-panel rounded-2xl p-8 md:p-12 reveal">
+                <h3 class="text-2xl font-bold text-white mb-8 text-center">Комплексное сопровождение для доступа к 100+ мерам господдержки</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="text-center p-4">
+                        <div class="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div class="text-white font-medium">Льготные кредиты</div>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div class="text-white font-medium">Субсидии</div>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path></svg>
+                        </div>
+                        <div class="text-white font-medium">Налоговые льготы</div>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        </div>
+                        <div class="text-white font-medium">Земельные участки</div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-8 border-t border-gray-700">
+                    <p class="text-gray-400 text-center mb-4">Ключевые институты взаимодействия:</p>
+                    <div class="flex flex-wrap justify-center gap-3">
+                        <span class="px-4 py-2 bg-gray-800 rounded-full text-sm text-gray-300">Банк развития Казахстана</span>
+                        <span class="px-4 py-2 bg-gray-800 rounded-full text-sm text-gray-300">Фонд Даму</span>
+                        <span class="px-4 py-2 bg-gray-800 rounded-full text-sm text-gray-300">KazakhExport</span>
+                        <span class="px-4 py-2 bg-gray-800 rounded-full text-sm text-gray-300">Kazakh Invest</span>
+                        <span class="px-4 py-2 bg-gray-800 rounded-full text-sm text-gray-300">Qazaqstan Investment Corporation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-		// Используем цикл для создания элементов списка
-		messages.forEach(function(message) {
-		var li = document.createElement('li');
-		li.textContent = message;
-		messageList.appendChild(li);
-		});
-	</script>
+    <!-- Process Section -->
+    <section id="process" class="py-24 bg-brand-surface/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">Схема работы</h2>
+                <p class="text-gray-400 text-lg">4 шага к успешному финансированию</p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-6 relative">
+                <!-- Step 1 -->
+                <div class="relative reveal">
+                    <div class="glass-panel rounded-2xl p-6 h-full card-hover">
+                        <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl mb-4">1</div>
+                        <h3 class="text-xl font-bold text-white mb-3">Аудит</h3>
+                        <p class="text-gray-400 text-sm mb-4">Предварительный бесплатный аудит кредитоспособности и рынка за 2-3 дня</p>
+                        <div class="text-blue-400 text-sm font-medium">2-3 дня</div>
+                    </div>
+                    <div class="hidden md:block step-connector"></div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="relative reveal">
+                    <div class="glass-panel rounded-2xl p-6 h-full card-hover">
+                        <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl mb-4">2</div>
+                        <h3 class="text-xl font-bold text-white mb-3">Подготовка</h3>
+                        <p class="text-gray-400 text-sm mb-4">Разработка безупречного пакета документов после утверждения плана</p>
+                        <div class="text-blue-400 text-sm font-medium">10-30 дней</div>
+                    </div>
+                    <div class="hidden md:block step-connector"></div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="relative reveal">
+                    <div class="glass-panel rounded-2xl p-6 h-full card-hover">
+                        <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl mb-4">3</div>
+                        <h3 class="text-xl font-bold text-white mb-3">Сопровождение</h3>
+                        <p class="text-gray-400 text-sm mb-4">Официальный запуск процесса в финансовой организации</p>
+                        <div class="text-blue-400 text-sm font-medium">10-30 дней</div>
+                    </div>
+                    <div class="hidden md:block step-connector"></div>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="relative reveal">
+                    <div class="glass-panel rounded-2xl p-6 h-full card-hover border-2 border-blue-500/50">
+                        <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-yellow-600 rounded-full flex items-center justify-center text-white font-bold text-xl mb-4">4</div>
+                        <h3 class="text-xl font-bold text-white mb-3">Результат</h3>
+                        <p class="text-gray-400 text-sm mb-4">Получение решения, выполнение условий и подписание договора</p>
+                        <div class="text-yellow-400 text-sm font-medium">Финансирование</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Timeline Info -->
+            <div class="mt-12 glass-panel rounded-2xl p-8 reveal">
+                <h4 class="text-lg font-bold text-white mb-4">Ориентировочные сроки получения займов:</h4>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                        <div>
+                            <div class="text-white font-medium">1-2 месяца</div>
+                            <div class="text-gray-500 text-sm">БВУ (Даму), БРК (экспорт)</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
+                        <div>
+                            <div class="text-white font-medium">4-6 месяцев</div>
+                            <div class="text-gray-500 text-sm">Фонд развития промышленности</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
+                        <div>
+                            <div class="text-white font-medium">6-12 месяцев</div>
+                            <div class="text-gray-500 text-sm">БРК (индустриальные проекты)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<script src="dist/js/main.min.js"></script>
+    <!-- Why Us Section -->
+    <section id="expertise" class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-6">Почему мы?</h2>
+                    <p class="text-xl text-gray-400 mb-8">Наша ключевая задача – перевести язык вашего бизнеса на язык, который поймет и «полюбит» кредитный комитет.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-2xl font-bold text-blue-400">1000+</span>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold text-lg">Проанализированных проектов</h4>
+                                <p class="text-gray-500">в банках и госструктурах</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-2xl font-bold text-yellow-400">BIG4</span>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold text-lg">Опыт в ведущих компаниях</h4>
+                                <p class="text-gray-500">Банк развития Казахстана, Фонд Даму, ФРП, ведущие БВУ</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold text-lg">ИИ и Big Data</h4>
+                                <p class="text-gray-500">Методы мета-анализа для решений на основе данных</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative reveal">
+                    <div class="glass-panel rounded-2xl p-8 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
+                        <h3 class="text-2xl font-bold text-white mb-6">Клиенты из стран:</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="px-4 py-2 bg-gray-800 rounded-lg text-gray-300">Турция</span>
+                            <span class="px-4 py-2 bg-gray-800 rounded-lg text-gray-300">ОАЭ</span>
+                            <span class="px-4 py-2 bg-gray-800 rounded-lg text-gray-300">Китай</span>
+                            <span class="px-4 py-2 bg-gray-800 rounded-lg text-gray-300">США</span>
+                            <span class="px-4 py-2 bg-gray-800 rounded-lg text-gray-300">Великобритания</span>
+                            <span class="px-4 py-2 bg-gray-800 rounded-lg text-gray-300">и др.</span>
+                        </div>
+                        
+                        <div class="mt-8 pt-8 border-t border-gray-700">
+                            <p class="text-gray-400 italic">"Мы действуем как ваш финансовый адвокат, добиваясь не просто привлечения средств, а оптимальных условий, усиливающих экономику проекта"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="contact" class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-yellow-900/20"></div>
+        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"></div>
+        
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center reveal">
+            <h2 class="font-display text-4xl md:text-6xl font-bold text-white mb-6">Готовы начать?</h2>
+            <p class="text-xl text-gray-400 mb-8">Запишитесь на бесплатную диагностическую сессию</p>
+            
+            <div class="glass-panel rounded-2xl p-8 md:p-12 max-w-2xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-8 mb-8 text-left">
+                    <div>
+                        <h4 class="text-white font-bold mb-2">Вы экономите:</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Годы работы</li>
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Лишние риски</li>
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Ненужный стресс</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold mb-2">Вы получаете:</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li class="flex items-center"><span class="text-blue-500 mr-2">✓</span> Экспертизу BIG4</li>
+                            <li class="flex items-center"><span class="text-blue-500 mr-2">✓</span> Личное сопровождение</li>
+                            <li class="flex items-center"><span class="text-blue-500 mr-2">✓</span> Оптимальные условия</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <a href="tel:+77028644622" class="block w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-[1.02]">
+                        Позвонить: +7 (702) 864-46-22
+                    </a>
+                    <a href="mailto:n@usmanov.info" class="block w-full bg-gray-800 hover:bg-gray-700 text-white py-4 rounded-xl font-bold text-lg transition-all border border-gray-700">
+                        Написать: n@usmanov.info
+                    </a>
+                </div>
+                
+                <div class="mt-6 pt-6 border-t border-gray-700">
+                    <a href="https://usmanov.info" target="_blank" class="text-blue-400 hover:text-blue-300 text-sm">usmanov.info →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white">S</div>
+                    <span class="font-display font-bold text-xl text-white">STAT<span class="text-blue-500">BANK</span></span>
+                </div>
+                <div class="text-gray-500 text-sm">
+                    © 2026 Statbank. Все права защищены.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-scrolled');
+            } else {
+                navbar.classList.remove('nav-scrolled');
+            }
+        });
+        
+        // Reveal animations
+        const reveals = document.querySelectorAll('.reveal');
+        reveals.forEach((element, index) => {
+            gsap.fromTo(element, 
+                { opacity: 0, y: 30 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    delay: index * 0.1,
+                    scrollTrigger: {
+                        trigger: element,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    }
+                }
+            );
+        });
+        
+        // Counter animation
+        const counters = document.querySelectorAll('.stat-number');
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            gsap.to(counter, {
+                innerHTML: target,
+                duration: 2,
+                snap: { innerHTML: 1 },
+                scrollTrigger: {
+                    trigger: counter,
+                    start: 'top 85%'
+                }
+            });
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        // Add mobile menu functionality here if needed
+        
+        // Parallax effect for hero
+        gsap.to('.grid-lines', {
+            backgroundPosition: '0 100%',
+            ease: 'none',
+            scrollTrigger: {
+                trigger: 'body',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: 0.5
+            }
+        });
+    </script>
 </body>
 </html>
